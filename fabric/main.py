@@ -25,6 +25,7 @@ from fabric.state import env_options
 from fabric.tasks import Task, execute, get_task_details
 from fabric.task_utils import _Dict, crawl
 from fabric.utils import abort, indent, warn, _pty_size
+import collections
 
 
 # One-time calculation of "all internal callables" to avoid doing this on every
@@ -123,7 +124,7 @@ def is_classic_task(tup):
     name, func = tup
     try:
         is_classic = (
-            callable(func)
+            isinstance(func, collections.Callable)
             and (func not in _internals)
             and not name.startswith('_')
         )

@@ -2,6 +2,7 @@ from six import string_types
 
 from fabric.utils import abort, indent
 from fabric import state
+import collections
 
 
 # For attribute tomfoolery
@@ -58,7 +59,7 @@ def merge(hosts, roles, exclude, roledefs):
         if isinstance(value, dict):
             value = value['hosts']
         # Handle "lazy" roles (callables)
-        if callable(value):
+        if isinstance(value, collections.Callable):
             value = value()
         role_hosts += value
 

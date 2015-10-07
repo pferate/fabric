@@ -12,6 +12,7 @@ from fabric.context_managers import settings
 from fabric.job_queue import JobQueue
 from fabric.task_utils import crawl, merge, parse_kwargs
 from fabric.exceptions import NetworkError
+import collections
 
 if sys.version_info[:2] == (2, 5):
     # Python 2.5 inspect.getargspec returns a tuple
@@ -327,7 +328,7 @@ def execute(task, *args, **kwargs):
     my_env = {'clean_revert': True}
     results = {}
     # Obtain task
-    is_callable = callable(task)
+    is_callable = isinstance(task, collections.Callable)
     if not (is_callable or _is_task(task)):
         # Assume string, set env.command to it
         my_env['command'] = task

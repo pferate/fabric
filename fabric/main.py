@@ -14,6 +14,7 @@ from optparse import OptionParser
 import os
 import sys
 import types
+from six import string_types
 
 # For checking callables against the API, & easy mocking
 from fabric import api, state, colors
@@ -389,7 +390,7 @@ def _print_docstring(docstrings, name):
     if not docstrings:
         return False
     docstring = crawl(name, state.commands).__doc__
-    if isinstance(docstring, basestring):
+    if isinstance(docstring, string_types):
         return docstring
 
 
@@ -622,7 +623,7 @@ def main(fabfile_locations=None):
         # Handle --hosts, --roles, --exclude-hosts (comma separated string =>
         # list)
         for key in ['hosts', 'roles', 'exclude_hosts']:
-            if key in state.env and isinstance(state.env[key], basestring):
+            if key in state.env and isinstance(state.env[key], string_types):
                 state.env[key] = state.env[key].split(',')
 
         # Feed the env.tasks : tasks that are asked to be executed.

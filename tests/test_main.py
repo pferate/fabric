@@ -6,6 +6,7 @@ from operator import isMappingType
 import os
 import sys
 from contextlib import contextmanager
+from six import iteritems
 
 from fudge import Fake, patched_context, with_fakes
 from nose.tools import ok_, eq_
@@ -586,7 +587,7 @@ def name_to_task(name):
 
 def strings_to_tasks(d):
     ret = {}
-    for key, value in d.iteritems():
+    for key, value in iteritems(d):
         if isMappingType(value):
             val = strings_to_tasks(value)
         else:

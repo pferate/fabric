@@ -1,4 +1,4 @@
-from six import string_types
+from six import iteritems, string_types
 
 from fabric.utils import abort, indent
 from fabric import state
@@ -84,7 +84,7 @@ def parse_kwargs(kwargs):
     hosts = []
     roles = []
     exclude_hosts = []
-    for key, value in kwargs.iteritems():
+    for key, value in iteritems(kwargs):
         if key == 'host':
             hosts = [value]
         elif key == 'hosts':

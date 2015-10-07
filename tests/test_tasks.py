@@ -6,6 +6,7 @@ import unittest
 from nose.tools import eq_, raises, ok_
 import random
 import sys
+from six import iteritems
 
 import fabric
 from fabric.tasks import WrappedCallableTask, execute, Task, get_task_details
@@ -167,7 +168,7 @@ def dict_contains(superset, subset):
     """
     Assert that all key/val pairs in dict 'subset' also exist in 'superset'
     """
-    for key, value in subset.iteritems():
+    for key, value in iteritems(subset):
         ok_(key in superset)
         eq_(superset[key], value)
 
@@ -442,14 +443,14 @@ class TestExecuteEnvInteractions(FabricTest):
             'hosts': [],
             'host_string': None
         }
-        for key, value in assertions.items():
+        for key, value in iteritems(assertions):
             eq_(env[key], value)
         # Run
         with hide('everything'):
             result = execute(mytask)
         eq_(len(result), 2)
         # Post-assertions
-        for key, value in assertions.items():
+        for key, value in iteritems(assertions):
             eq_(env[key], value)
 
     @server()

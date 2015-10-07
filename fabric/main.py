@@ -14,7 +14,7 @@ from optparse import OptionParser
 import os
 import sys
 import types
-from six import string_types
+from six import iteritems, string_types
 
 # For checking callables against the API, & easy mocking
 from fabric import api, state, colors
@@ -31,7 +31,7 @@ import collections
 # One-time calculation of "all internal callables" to avoid doing this on every
 # check of a given fabfile callable (in is_classic_task()).
 _modules = [api, project, files, console, colors]
-_internals = reduce(lambda x, y: x + filter(callable, vars(y).values()),
+_internals = reduce(lambda x, y: x + filter(callable, list(vars(y).values())),
     _modules,
     []
 )
@@ -191,7 +191,7 @@ def load_tasks_from_module(imported):
         imported_vars = [(name, imported_vars[name]) for name in \
                          imported_vars if name in imported_vars["__all__"]]
     else:
-        imported_vars = imported_vars.items()
+        imported_vars = list(imported_vars.items())
     # Return a two-tuple value.  First is the documentation, second is a
     # dictionary of callables only (and don't include Fab operations or
     # underscored callables)
@@ -229,7 +229,7 @@ def extract_tasks(imported_vars):
             classic_tasks[name] = obj
         elif is_task_module(obj):
             docs, newstyle, classic, default = load_tasks_from_module(obj)
-            for task_name, task in newstyle.items():
+            for task_name, task in iteritems(newstyle):
                 if name not in new_style_tasks:
                     new_style_tasks[name] = _Dict()
                 new_style_tasks[name][task_name] = task
@@ -360,7 +360,7 @@ def _is_task(name, value):
 
 def _sift_tasks(mapping):
     tasks, collections = [], []
-    for name, value in mapping.iteritems():
+    for name, value in iteritems(mapping):
         if _is_task(name, value):
             tasks.append(name)
         elif isMappingType(value):

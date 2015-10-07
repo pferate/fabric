@@ -36,6 +36,7 @@ Context managers for use with the ``with`` statement.
 from contextlib import contextmanager, nested
 import socket
 import select
+from six import iteritems
 
 from fabric.thread_handling import ThreadHandler
 from fabric.state import output, win32, connections, env
@@ -133,7 +134,7 @@ def _setenv(variables):
     clean_revert = variables.pop('clean_revert', False)
     previous = {}
     new = []
-    for key, value in variables.iteritems():
+    for key, value in iteritems(variables):
         if key in state.env:
             previous[key] = state.env[key]
         else:
@@ -143,7 +144,7 @@ def _setenv(variables):
         yield
     finally:
         if clean_revert:
-            for key, value in variables.iteritems():
+            for key, value in iteritems(variables):
                 # If the current env value for this key still matches the
                 # value we set it to beforehand, we are OK to revert it to the
                 # pre-block value.

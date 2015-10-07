@@ -14,6 +14,7 @@ import sys
 import time
 from glob import glob
 from contextlib import closing, contextmanager
+from six import iteritems
 
 from fabric.context_managers import (settings, char_buffered, hide,
     quiet as quiet_manager, warn_only as warn_only_manager)
@@ -710,7 +711,7 @@ def _prefix_env_vars(command, local=False):
 
         exports = ' '.join(
             '%s%s="%s"' % (set_cmd, k, v if k == 'PATH' else _shell_escape(v))
-            for k, v in env_vars.iteritems()
+            for k, v in iteritems(env_vars)
         )
         shell_env_str = '%s%s && ' % (exp_cmd, exports)
     else:

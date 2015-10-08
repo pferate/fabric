@@ -10,7 +10,7 @@ import sys
 import threading
 import time
 import types
-from six import StringIO
+from six import reraise, StringIO
 from functools import wraps
 from Python26SocketServer import BaseRequestHandler, ThreadingMixIn, TCPServer
 
@@ -489,6 +489,6 @@ def server(
                 # Handle subthread exceptions
                 e = worker.exception
                 if e:
-                    raise e[0], e[1], e[2]
+                    reraise(e[0], e[1], e[2])
         return inner
     return run_server

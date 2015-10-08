@@ -1,6 +1,5 @@
 from __future__ import with_statement
 
-from contextlib import nested
 from six import StringIO
 
 from nose.tools import ok_
@@ -980,7 +979,7 @@ class TestFileTransfers(FabricTest):
         local = self.path(f)
         with open(local, 'w') as fd:
             fd.write('test')
-        with nested(cd(d), hide('everything')):
+        with cd(d), hide('everything'):
             put(local, f)
         assert self.exists_remotely('%s/%s' % (d, f))
 
@@ -990,7 +989,7 @@ class TestFileTransfers(FabricTest):
         get() should honor env.cwd for relative remote paths
         """
         local = self.path('test.txt')
-        with nested(cd('/tmp'), hide('everything')):
+        with cd('/tmp'), hide('everything'):
             get('test.txt', local)
         assert os.path.exists(local)
 
@@ -1002,7 +1001,7 @@ class TestFileTransfers(FabricTest):
         local = self.path('test.txt')
         with open(local, 'w') as fd:
             fd.write('test')
-        with nested(cd('/tmp'), hide('everything')):
+        with cd('/tmp'), hide('everything'):
             put(local, '/test.txt')
         assert not self.exists_remotely('/tmp/test.txt')
         assert self.exists_remotely('/test.txt')
@@ -1013,7 +1012,7 @@ class TestFileTransfers(FabricTest):
         get() should not prepend env.cwd to absolute remote paths
         """
         local = self.path('test.txt')
-        with nested(cd('/tmp'), hide('everything')):
+        with cd('/tmp'), hide('everything'):
             get('/test.txt', local)
         assert os.path.exists(local)
 
@@ -1028,7 +1027,9 @@ class TestFileTransfers(FabricTest):
         os.makedirs(os.path.dirname(local))
         with open(local, 'w') as fd:
             fd.write("contents")
-        with nested(lcd(self.path(d)), hide('everything')):
+        # with ExitStack() as stack:
+        #     managers = [stack.enter_context(arg) for arg in (lcd(self.path(d)), hide('everything'))]
+        with lcd(self.path(d)), hide('everything'):
             put(f, '/')
         assert self.exists_remotely('/%s' % f)
 
@@ -1039,7 +1040,7 @@ class TestFileTransfers(FabricTest):
         """
         d = self.path('subdir')
         f = 'file.txt'
-        with nested(lcd(d), hide('everything')):
+        with lcd(d), hide('everything'):
             get(f, f)
         assert self.exists_locally(os.path.join(d, f))
 
@@ -1081,7 +1082,7 @@ def test_local_output_and_capture():
                     hides.append('stderr')
                 else:
                     shows.append('stderr')
-                with nested(hide(*hides), show(*shows)):
+                with hide(*hides), show(*shows):
                     d = "local(): capture: %r, stdout: %r, stderr: %r" % (
                         capture, stdout, stderr
                     )

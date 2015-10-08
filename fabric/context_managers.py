@@ -33,10 +33,11 @@ Context managers for use with the ``with`` statement.
     ``nested`` itself -- see its API doc for details.
 """
 
-from contextlib import contextmanager, nested
+from contextlib import contextmanager
 import socket
 import select
-from six import iteritems
+import sys
+from six import iteritems, reraise
 from collections import Callable
 
 from fabric.thread_handling import ThreadHandler
@@ -242,7 +243,35 @@ def settings(*args, **kwargs):
     managers = list(args)
     if kwargs:
         managers.append(_setenv(kwargs))
-    return nested(*managers)
+    return iter_nested(managers)
+
+
+@contextmanager
+def iter_nested(mgr_iterator):
+    exits = []
+    vars = []
+    exc = None # Python 3
+    exc_tuple = (None, None, None)
+    try:
+        for mgr in mgr_iterator:
+            exit = mgr.__exit__
+            enter = mgr.__enter__
+            vars.append(enter())
+            exits.append(exit)
+        yield vars
+        # All of the following is new and fit for Python 3
+    except Exception:
+        exc = sys.exc_info()
+    finally:
+        while exits:
+            exit = exits.pop()
+            try:
+                if exit(*exc_tuple):
+                    exc = None
+            except Exception:
+                exc = sys.exc_info()
+        if exc:
+            reraise(exc[0], exc[1], exc[2])
 
 
 def cd(path):

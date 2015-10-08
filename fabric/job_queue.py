@@ -7,7 +7,7 @@ items, though within Fabric itself only ``Process`` objects are used/supported.
 
 from __future__ import with_statement
 import time
-import Queue
+from six.moves.queue import Queue, Empty
 from multiprocessing import Process
 
 from fabric.state import env
@@ -190,7 +190,7 @@ class JobQueue(object):
             try:
                 datum = self._comms_queue.get_nowait()
                 results[datum['name']]['results'] = datum['result']
-            except Queue.Empty:
+            except Empty:
                 break
 
 
@@ -215,7 +215,7 @@ def try_using(parallel_type):
         from threading import Thread as Bucket
 
     # Make a job_queue with a bubble of len 5, and have it print verbosely
-    queue = Queue.Queue()
+    queue = Queue()
     jobs = JobQueue(5, queue)
     jobs._debug = True
 

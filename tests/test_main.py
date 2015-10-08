@@ -2,7 +2,7 @@ from __future__ import with_statement
 
 import copy
 from functools import partial
-from operator import isMappingType
+from collections import Mapping
 import os
 import sys
 from contextlib import contextmanager
@@ -588,7 +588,7 @@ def name_to_task(name):
 def strings_to_tasks(d):
     ret = {}
     for key, value in iteritems(d):
-        if isMappingType(value):
+        if isinstance(value, Mapping):
             val = strings_to_tasks(value)
         else:
             val = name_to_task(value)

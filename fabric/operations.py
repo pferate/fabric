@@ -15,6 +15,7 @@ import time
 from glob import glob
 from contextlib import closing, contextmanager
 from six import iteritems
+from collections import Callable
 
 from fabric.context_managers import (settings, char_buffered, hide,
     quiet as quiet_manager, warn_only as warn_only_manager)
@@ -32,7 +33,6 @@ from fabric.utils import (
     warn,
     apply_lcwd
 )
-import collections
 
 
 def _shell_escape(string):
@@ -218,7 +218,7 @@ def prompt(text, key=None, default='', validate=None):
         # Handle validation
         if validate:
             # Callable
-            if isinstance(validate, collections.Callable):
+            if isinstance(validate, Callable):
                 # Callable validate() must raise an exception if validation
                 # fails.
                 try:
@@ -344,7 +344,7 @@ def put(local_path=None, remote_path=None, use_sudo=False,
 
     # Test whether local_path is a path or a file-like object
     local_is_path = not (hasattr(local_path, 'read') \
-        and isinstance(local_path.read, collections.Callable))
+        and isinstance(local_path.read, Callable))
 
     ftp = SFTP(env.host_string)
 
@@ -529,7 +529,7 @@ def get(remote_path, local_path=None, use_sudo=False, temp_dir=""):
 
     # Test whether local_path is a path or a file-like object
     local_is_path = not (hasattr(local_path, 'write') \
-        and isinstance(local_path.write, collections.Callable))
+        and isinstance(local_path.write, Callable))
 
     # Honor lcd() where it makes sense
     if local_is_path:

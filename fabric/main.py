@@ -9,12 +9,12 @@ The other callables defined in this module are internal only. Anything useful
 to individuals leveraging Fabric as a library, should be kept elsewhere.
 """
 import getpass
-from operator import isMappingType
 from optparse import OptionParser
 import os
 import sys
 import types
 from six import iteritems, string_types
+from collections import Callable, Mapping
 
 # For checking callables against the API, & easy mocking
 from fabric import api, state, colors
@@ -25,7 +25,6 @@ from fabric.state import env_options
 from fabric.tasks import Task, execute, get_task_details
 from fabric.task_utils import _Dict, crawl
 from fabric.utils import abort, indent, warn, _pty_size
-import collections
 
 
 # One-time calculation of "all internal callables" to avoid doing this on every
@@ -124,7 +123,7 @@ def is_classic_task(tup):
     name, func = tup
     try:
         is_classic = (
-            isinstance(func, collections.Callable)
+            isinstance(func, Callable)
             and (func not in _internals)
             and not name.startswith('_')
         )
@@ -363,7 +362,7 @@ def _sift_tasks(mapping):
     for name, value in iteritems(mapping):
         if _is_task(name, value):
             tasks.append(name)
-        elif isMappingType(value):
+        elif isinstance(value, Mapping):
             collections.append(name)
     tasks = sorted(tasks)
     collections = sorted(collections)

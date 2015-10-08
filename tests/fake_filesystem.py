@@ -1,8 +1,7 @@
 import os
 import stat
-from StringIO import StringIO
 from types import StringTypes
-from six import iteritems
+from six import iteritems, StringIO
 
 from fabric.network import ssh
 

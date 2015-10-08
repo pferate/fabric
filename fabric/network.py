@@ -11,8 +11,7 @@ import re
 import time
 import socket
 import sys
-from StringIO import StringIO
-from six import string_types
+from six import string_types, StringIO
 
 
 from fabric.auth import get_password, set_password

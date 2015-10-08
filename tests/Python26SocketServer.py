@@ -688,7 +688,7 @@ class DatagramRequestHandler(BaseRequestHandler):
         try:
             from cStringIO import StringIO
         except ImportError:
-            from StringIO import StringIO
+            from six import StringIO
         self.packet, self.socket = self.request
         self.rfile = StringIO(self.packet)
         self.wfile = StringIO()

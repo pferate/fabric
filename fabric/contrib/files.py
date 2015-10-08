@@ -8,9 +8,8 @@ import hashlib
 import tempfile
 import re
 import os
-from StringIO import StringIO
 from functools import partial
-from six import string_types
+from six import string_types, StringIO
 
 from fabric.api import *
 from fabric.utils import apply_lcwd

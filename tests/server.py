@@ -10,7 +10,7 @@ import sys
 import threading
 import time
 import types
-from StringIO import StringIO
+from six import StringIO
 from functools import wraps
 from Python26SocketServer import BaseRequestHandler, ThreadingMixIn, TCPServer
 

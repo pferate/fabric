@@ -14,6 +14,7 @@ import os
 import sys
 import types
 from six import iteritems, string_types
+from six.moves import reduce
 from collections import Callable, Mapping
 
 # For checking callables against the API, & easy mocking
@@ -30,7 +31,7 @@ from fabric.utils import abort, indent, warn, _pty_size
 # One-time calculation of "all internal callables" to avoid doing this on every
 # check of a given fabfile callable (in is_classic_task()).
 _modules = [api, project, files, console, colors]
-_internals = reduce(lambda x, y: x + filter(callable, list(vars(y).values())),
+_internals = reduce(lambda x, y: x + list(filter(callable, list(vars(y).values()))),
     _modules,
     []
 )
@@ -64,7 +65,7 @@ def load_settings(path):
     """
     if os.path.exists(path):
         comments = lambda s: s and not s.startswith("#")
-        settings = filter(comments, open(path, 'r'))
+        settings = list(filter(comments, open(path, 'r')))
         return dict((k.strip(), v.strip()) for k, _, v in
             [s.partition('=') for s in settings])
     # Handle nonexistent or empty settings file
@@ -406,7 +407,7 @@ def _normal_list(docstrings=True):
         output = None
         docstring = _print_docstring(docstrings, name)
         if docstring:
-            lines = filter(None, docstring.splitlines())
+            lines = [line for line in docstring.splitlines() if line]
             first_line = lines[0].strip()
             # Truncate it if it's longer than N chars
             size = max_width - (max_len + len(sep) + len(trail))
@@ -424,7 +425,7 @@ def _nested_list(mapping, level=1):
     result = []
     tasks, collections = _sift_tasks(mapping)
     # Tasks come first
-    result.extend(map(lambda x: indent(x, spaces=level * 4), tasks))
+    result.extend([indent(x, spaces=level * 4) for x in tasks])
     for collection in collections:
         module = mapping[collection]
         # Section/module "header"

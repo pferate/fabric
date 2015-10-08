@@ -1,7 +1,6 @@
 import os
 import stat
-from types import StringTypes
-from six import iteritems, StringIO
+from six import iteritems, StringIO, string_types
 
 from fabric.network import ssh
 
@@ -38,7 +37,7 @@ class FakeFile(StringIO):
         pass
 
     def __cmp__(self, other):
-        me = str(self) if isinstance(other, StringTypes) else self
+        me = str(self) if isinstance(other, string_types) else self
         return cmp(me, other)
 
 
@@ -50,7 +49,7 @@ class FakeFilesystem(dict):
             self[key] = value
 
     def __setitem__(self, key, value):
-        if isinstance(value, StringTypes) or value is None:
+        if isinstance(value, string_types) or value is None:
             value = FakeFile(value, key)
         super(FakeFilesystem, self).__setitem__(key, value)
 

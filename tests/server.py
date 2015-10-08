@@ -9,8 +9,7 @@ import stat
 import sys
 import threading
 import time
-import types
-from six import reraise, StringIO
+from six import reraise, StringIO, string_types
 from functools import wraps
 from Python26SocketServer import BaseRequestHandler, ThreadingMixIn, TCPServer
 
@@ -408,7 +407,7 @@ def serve_responses(responses, files, passwords, home, pubkeys, port):
             stderr = ""
             status = 0
             sleep = 0
-            if isinstance(result, types.StringTypes):
+            if isinstance(result, string_types):
                 stdout = result
             else:
                 size = len(result)

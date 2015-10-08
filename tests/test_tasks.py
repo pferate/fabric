@@ -354,7 +354,7 @@ class TestExecute(FabricTest):
         Networked but serial tasks should return per-host-string dict
         """
         ports = [2200, 2201]
-        hosts = map(lambda x: '127.0.0.1:%s' % x, ports)
+        hosts = ['127.0.0.1:%s' % x for x in ports]
         def task():
             run("ls /simple")
             return "foo"

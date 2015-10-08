@@ -124,7 +124,7 @@ class Task(object):
         # from the CLI or from module-level code). This will be the empty list
         # if these have not been set -- which is fine, this method should
         # return an empty list if no hosts have been set anywhere.
-        env_vars = map(_get_list(env), "hosts roles exclude_hosts".split())
+        env_vars = list(map(_get_list(env), "hosts roles exclude_hosts".split()))
         env_vars.append(roledefs)
         return merge(*env_vars), env.get('roles', [])
 
@@ -202,10 +202,7 @@ def requires_parallel(task):
 
 
 def _parallel_tasks(commands_to_run):
-    return any(map(
-        lambda x: requires_parallel(crawl(x[0], state.commands)),
-        commands_to_run
-    ))
+    return any([requires_parallel(crawl(x[0], state.commands)) for x in commands_to_run])
 
 
 def _is_network_error_ignored():

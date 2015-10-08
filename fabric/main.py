@@ -383,7 +383,7 @@ def _task_names(mapping):
         if hasattr(module, 'default'):
             tasks.append(collection)
         join = lambda x: ".".join((collection, x))
-        tasks.extend(map(join, _task_names(module)))
+        tasks.extend(list(map(join, _task_names(module))))
     return tasks
 
 
